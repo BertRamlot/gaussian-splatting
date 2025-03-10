@@ -24,6 +24,14 @@ parser.add_argument("--skip_training", action="store_true")
 parser.add_argument("--skip_rendering", action="store_true")
 parser.add_argument("--skip_metrics", action="store_true")
 parser.add_argument("--output_path", default="./eval")
+parser.add_argument("--use_depth", action="store_true")
+parser.add_argument("--use_expcomp", action="store_true")
+parser.add_argument("--fast", action="store_true")
+parser.add_argument("--aa", action="store_true")
+
+
+
+
 args, _ = parser.parse_known_args()
 
 all_scenes = []
@@ -47,6 +55,11 @@ if not args.skip_rendering:
         all_sources.append("/home/bert/datasets/nerf_synthetic/" + scene)
 
     common_args = " --quiet --eval --skip_train --sh_degree 2"
+    if args.aa:
+        common_args += " --antialiasing "
+    if args.use_expcomp:
+        common_args += " --train_test_exp "
+
     for scene, source in zip(all_scenes, all_sources):
         print(scene, source)
         # os.system("python render.py --iteration 7000 -s " + source + " -m " + args.output_path + "/" + scene + common_args)
